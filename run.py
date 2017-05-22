@@ -15,22 +15,34 @@ def read_file(file):
 
 
 def write_data_to_file(data, file):
-    text_file = open(file, "w")
-    text_file.write(data)
-    text_file.close()
+    with open(file, "w") as f:
+        f.write(data)
 
 
-train_set = read_file("pan_tadeusz/pan_tadeusz_1_10.txt")
-validate_set = read_file("pan_tadeusz/pan_tadeusz_11.txt")
-test_set = read_file("pan_tadeusz/pan_tadeusz_12.txt")
+def load_data():
+    train_set = read_file("pan_tadeusz/pan_tadeusz_1_10.txt")
+    valid_set = read_file("pan_tadeusz/pan_tadeusz_11.txt")
+    test_set = read_file("pan_tadeusz/pan_tadeusz_12.txt")
 
-ALPHABET = set(train_set).union(set(validate_set)).union(set(test_set))
+    def generate_mappers(train_data, valid_data, test_data):
+        chars = sorted(list(set(train_data) | set(valid_data) | set(test_data)))
+        c2i = {c: i for i, c in enumerate(chars)}
+        i2c = {i: c for i, c in enumerate(chars)}
+        return c2i, i2c
 
-LETTER_INDX = {}
-SIMPLE_LIST = []
-for i, l in enumerate(ALPHABET):
-    LETTER_INDX[l] = i
-    SIMPLE_LIST.append(l)
+    c2i, i2c = generate_mappers(train_set, valid_set, test_set)
+    train_data = [c2i[x] for x in train_set]
+    valid_data = [c2i[x] for x in valid_set]
+    test_data = [c2i[x] for x in test_set]
+    return (train_data, valid_data, test_data), (c2i, i2c)
+
+
+(train_set, valid_set, test_set), (c2i, i2c) = load_data()
+
+ALPHABET = c2i.keys()
+
+LETTER_INDX = c2i
+SIMPLE_LIST = i2c
 
 ALPHABET_SIZE = len(ALPHABET)
 INIT_SCALE = 0.1
@@ -44,11 +56,7 @@ DROPOUT = 0.2
 USE_LSTM_CELL = True
 ADAM = False
 
-preplexities = []
-
-train_set = list(map(lambda l: LETTER_INDX[l], train_set))
-validate_set = list(map(lambda l: LETTER_INDX[l], validate_set))
-test_set = list(map(lambda l: LETTER_INDX[l], test_set))
+perplexities = []
 
 
 def iterate_dataset(raw_data, batch_size, num_steps):
@@ -176,11 +184,11 @@ sess = tf.InteractiveSession()
 
 def start():
     global sess
-    model = LSTM(200, ALPHABET_SIZE, BATCH_SIZE, LAYERS_COUNT, DROPOUT)
+    model = LSTM(200, ALPHABET_SIZE, BATCH_SIZE, LAYERS_COUNT, DROPOUT, USE_LSTM_CELL, NUM_STEPS, LEARNING_RATE)
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
     print(LAYERS_COUNT, HIDDEN_LAYER_SIZE)
-    return train(train_set, validate_set, test_set, model)
+    return train(train_set, valid_set, test_set, model)
 
 
 tf.reset_default_graph()
@@ -197,7 +205,6 @@ perplexities = start()
 lb = 'Desc_1'
 line1, = plt.plot(perplexities, label=lb)
 # write_data_to_file(des, "ndescs/" + lb + ".txt")
-preplexities = []
 
 plt.legend(handler_map={line1: HandlerLine2D(numpoints=4)})
 plt.savefig("results")
