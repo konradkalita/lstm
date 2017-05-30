@@ -1,3 +1,5 @@
+#  oświadczam że poniższy kod napisałem samodzielnie - Konrad Kalita
+
 import autograd.numpy as np
 
 import tensorflow as tf
@@ -26,7 +28,7 @@ else:
     train_filename = 'ptb/ptb.train.txt'
     valid_filename = 'ptb/ptb.valid.txt'
     test_filename = 'ptb/ptb.test.txt'
-    
+
 def load_data():
     train_set = read_file(train_filename)
     valid_set = read_file(valid_filename)
@@ -113,8 +115,11 @@ def get_letter(predicts):
 
 def generate_text(n, model):
     result = []
-    start = "no it was n't black monday"
-    # start = "Jam jest Jacek"
+    start = ''
+    if PAN_TADEUSZ:
+        start = "Jam jest Jacek"
+    else :
+        start = "no it was n't black monday"
     raw_start = list(map(lambda l: c2i[l], start))
     placeholders = model.reset_state(1)
     placeholders[model.scope.is_training] = False
