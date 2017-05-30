@@ -17,11 +17,20 @@ def write_data_to_file(data, file):
     with open(file, "w") as f:
         f.write(data)
 
-
+PAN_TADEUSZ = True
+if PAN_TADEUSZ:
+    train_filename = 'pan_tadeusz/pan_tadeusz_1_10.txt'
+    valid_filename = 'pan_tadeusz/pan_tadeusz_11.txt'
+    test_filename = 'pan_tadeusz/pan_tadeusz_12.txt'
+else:
+    train_filename = 'ptb/ptb.train.txt'
+    valid_filename = 'ptb/ptb.valid.txt'
+    test_filename = 'ptb/ptb.test.txt'
+    
 def load_data():
-    train_set = read_file("ptb/ptb.train.txt")
-    valid_set = read_file("ptb/ptb.valid.txt")
-    test_set = read_file("ptb/ptb.test.txt")
+    train_set = read_file(train_filename)
+    valid_set = read_file(valid_filename)
+    test_set = read_file(test_filename)
 
     def generate_mappers(train_data, valid_data, test_data):
         chars = sorted(list(set(train_data) | set(valid_data) | set(test_data)))
@@ -139,9 +148,9 @@ def generate_text(n, model):
 def train(train_set, valid_set, test_set, model):
     perplexities = []
     for i in range(0, EPOCHS_NUM):
-        current_epoch = i + 1
 
-        to_print = "Epoch: %d\n" % (current_epoch)
+
+        to_print = "Epoch: %d\n" % (i+1)
         print(to_print)
 
         train_perplexity = run_epoch(train_set, True, model)
@@ -166,7 +175,6 @@ def start(config):
     model = LSTMModel(config)
     sess = tf.InteractiveSession()
     sess.run(tf.global_variables_initializer())
-
     return train(train_set, valid_set, test_set, model)
 
 
@@ -175,7 +183,6 @@ BATCH_SIZE = 20
 NUM_STEPS = 20
 
 fig, ax = plt.subplots()
-# Now add the legend with some customizations.
 ax.set_yticks(np.arange(0, 10, 0.5))
 ax.grid(which='both')
 sess = tf.InteractiveSession()
