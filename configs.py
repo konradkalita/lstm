@@ -9,7 +9,7 @@ Config = collections.namedtuple(
         'batch_size',
         'num_steps',
         'dropout',
-        'cell_kind',
+        'google_cell',
         'learning_rate',
     ])
 
@@ -22,7 +22,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.0,
-        cell_kind=True,
+        google_cell=False,
         learning_rate=1.0
     )
 
@@ -33,7 +33,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.2,
-        cell_kind=True,
+        google_cell=False,
         learning_rate=1.0
     )
 
@@ -44,7 +44,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.0,
-        cell_kind=True,
+        google_cell=False,
         learning_rate=1.0
     )
 
@@ -55,7 +55,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.2,
-        cell_kind=True,
+        google_cell=False,
         learning_rate=1.0
     )
 
@@ -66,7 +66,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.2,
-        cell_kind=True,
+        google_cell=False,
         learning_rate=1.0
     )
 
@@ -77,7 +77,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.2,
-        cell_kind=False,
+        google_cell=False,
         learning_rate=1.0
     )
 
@@ -88,7 +88,7 @@ def get_configs(alphabet_size):
         batch_size=20,
         num_steps=20,
         dropout=0.2,
-        cell_kind=False,
+        google_cell=True,
         learning_rate=1.0
     )
 

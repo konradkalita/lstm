@@ -22,7 +22,7 @@ class LSTMModel:
         self.batch_size = config.batch_size
         self.dropout = config.dropout
         self.num_layers = config.num_layers
-        self.cell_kind = config.cell_kind
+        self.google_cell = config.google_cell
         self.num_steps = config.num_steps
         self.learning_rate = config.learning_rate
         self.scope = Scope()
@@ -37,7 +37,7 @@ class LSTMModel:
         self.cost_function(self.cells, self.batch, self.labels)
 
     def create_cell(self):
-        if self.cell_kind:
+        if not self.google_cell:
             cell = LSTMCell(self.size, self.alphabet_size)
         else:
             cell = NASCell(self.size)
